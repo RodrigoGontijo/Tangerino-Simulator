@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -127,7 +128,14 @@ public class MainActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendIntentWithExtras("cad.action", "CAD", "CAD" + registerID.getText().toString());
+                String id = registerID.getText().toString();
+                if (id.length() == 8) {
+                    sendIntentWithExtras("cad.action", "CAD", "CAD" + id);
+                }else{
+                    Toast toast = Toast.makeText(getApplicationContext(),"ID inválido",Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+
             }
         });
 
@@ -140,13 +148,27 @@ public class MainActivity extends AppCompatActivity {
         remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendIntentWithExtras("rem.action", "REM", "REM" + returnRemove.getText().toString());
+                String removeId = returnRemove.getText().toString();
+                if (removeId.length() == 8) {
+                    sendIntentWithExtras("rem.action", "REM", "REM" + removeId);
+                }else{
+                    Toast toast = Toast.makeText(getApplicationContext(),"ID inválido",Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+
+
             }
         });
         getMinutiae.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendIntentWithExtras("getMinutiae.action", "GETMINUTIAE", "GETMINUTIAE" + returnGetMinutiae.getText().toString());
+                String minutiae = returnGetMinutiae.getText().toString();
+                if (minutiae.length() == 8) {
+                    sendIntentWithExtras("getMinutiae.action", "GETMINUTIAE", "GETMINUTIAE" + minutiae);
+                }else{
+                    Toast toast = Toast.makeText(getApplicationContext(),"Minutiae inválida",Toast.LENGTH_SHORT);
+                    toast.show();
+                }
             }
         });
 
