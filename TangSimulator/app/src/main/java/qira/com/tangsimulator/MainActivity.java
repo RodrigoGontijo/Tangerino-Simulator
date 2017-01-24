@@ -23,7 +23,10 @@ public class MainActivity extends AppCompatActivity {
     private EditText returnGetMinutiae;
     private Button list;
     private EditText returnLst;
+    private Button setMinutiae;
+    private EditText returnSetMinutiae;
     private Button cleanFields;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
             public void onReceive(Context arg0, Intent intent) {
                 String action = intent.getAction();
                 if (action.equals("getMinutiae.action.return")) {
-                    returnGetMinutiae.setText(intent.getExtras().getString("GETMINUTIAE").substring(0, 40));
+                    returnGetMinutiae.setText(intent.getExtras().getString("GETMINUTIAE"));
                 }
             }
         };
@@ -114,14 +117,22 @@ public class MainActivity extends AppCompatActivity {
     public void setViews() {
         register = (Button) findViewById(R.id.register);
         registerID = (EditText) findViewById(R.id.register_id);
+
         identify = (Button) findViewById(R.id.identify);
         returnIdentify = (EditText) findViewById(R.id.return_identidy);
+
         remove = (Button) findViewById(R.id.remove);
         returnRemove = (EditText) findViewById(R.id.return_remove);
+
         getMinutiae = (Button) findViewById(R.id.get_minutiae);
         returnGetMinutiae = (EditText) findViewById(R.id.return_get_minutiae);
+
         list = (Button) findViewById(R.id.list);
         returnLst = (EditText) findViewById(R.id.return_list);
+
+        setMinutiae = (Button) findViewById(R.id.set_minutiae);
+        returnSetMinutiae = (EditText) findViewById(R.id.return_set_minutiae);
+
         cleanFields = (Button) findViewById(R.id.clean_fields);
 
 
@@ -166,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
                 if (minutiae.length() == 8) {
                     sendIntentWithExtras("getMinutiae.action", "GETMINUTIAE", "GETMINUTIAE" + minutiae);
                 }else{
-                    Toast toast = Toast.makeText(getApplicationContext(),"Minutiae inválida",Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getApplicationContext(),"Minúcia inválida",Toast.LENGTH_SHORT);
                     toast.show();
                 }
             }
@@ -176,6 +187,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sendIntentWithExtras("list.action", "LIST", "LIST");
+            }
+        });
+
+
+        setMinutiae.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String setMinutiae = returnSetMinutiae.getText().toString();
+                if (setMinutiae.length() == 1712) {
+                    sendIntentWithExtras("add.action", "ADD", "ADD" + setMinutiae);
+                }else{
+                    Toast toast = Toast.makeText(getApplicationContext(),"Minúcia inválida",Toast.LENGTH_SHORT);
+                    toast.show();
+                }
             }
         });
 

@@ -91,7 +91,7 @@
             android:layout_below="@+id/remove"
             android:layout_marginTop="3dp"
             android:background="@android:color/holo_blue_light"
-            android:text="Minutiae" />
+            android:text="GMinutiae" />
 
         <EditText
             android:id="@+id/return_get_minutiae"
@@ -127,6 +127,30 @@
             android:hint=""
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/white" />
+
+        <Button
+            android:id="@+id/set_minutiae"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_below="@+id/list"
+            android:layout_marginTop="3dp"
+            android:background="@android:color/holo_blue_light"
+            android:text="SMINUTIAE" />
+
+        <EditText
+            android:id="@+id/return_set_minutiae"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/return_list"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="3dp"
+            android:layout_toRightOf="@+id/register"
+            android:background="@android:color/holo_blue_light"
+            android:hint="Minutiae"
+            android:textColor="@android:color/black"
+            android:textColorHint="@android:color/white" />
+
+
 
     </RelativeLayout>
 
