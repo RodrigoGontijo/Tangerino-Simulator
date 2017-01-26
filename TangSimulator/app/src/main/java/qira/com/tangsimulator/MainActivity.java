@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private EditText returnLst;
     private Button setMinutiae;
     private EditText returnSetMinutiae;
+
+    private Button reset;
     private Button cleanFields;
 
 
@@ -34,13 +36,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         setViews();
+
         ledReceiver();
         cadReceiver();
         remReceiver();
         getMinutiaeReceiver();
         listReceiver();
+        addReceiver();
+        resetReceiver();
 
     }
+
+
 
     public void listReceiver() {
         BroadcastReceiver list = new BroadcastReceiver() {
@@ -113,6 +120,36 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver(getMinutiae, new IntentFilter("getMinutiae.action.return"));
     }
 
+    public void addReceiver() {
+        BroadcastReceiver add = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context arg0, Intent intent) {
+                String action = intent.getAction();
+                if (action.equals("add.action.return")) {
+                    returnSetMinutiae.setText(intent.getExtras().getString("ADD"));
+                }
+            }
+        };
+        registerReceiver(add, new IntentFilter("add.action.return"));
+    }
+
+    public void resetReceiver() {
+        BroadcastReceiver reset = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context arg0, Intent intent) {
+                String action = intent.getAction();
+                if (action.equals("reset.action.return")) {
+                    Toast toast = Toast.makeText(getApplicationContext(), intent.getExtras().getString("RESET"), Toast.LENGTH_LONG);
+                    toast.show();
+
+                }
+            }
+        };
+        registerReceiver(reset, new IntentFilter("reset.action.return"));
+    }
+
 
     public void setViews() {
         register = (Button) findViewById(R.id.register);
@@ -134,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
         returnSetMinutiae = (EditText) findViewById(R.id.return_set_minutiae);
 
         cleanFields = (Button) findViewById(R.id.clean_fields);
+        reset = (Button) findViewById(R.id.reset_sensor);
 
 
         register.setOnClickListener(new View.OnClickListener() {
@@ -142,8 +180,8 @@ public class MainActivity extends AppCompatActivity {
                 String id = registerID.getText().toString();
                 if (id.length() == 8) {
                     sendIntentWithExtras("cad.action", "CAD", "CAD" + id);
-                }else{
-                    Toast toast = Toast.makeText(getApplicationContext(),"ID inválido",Toast.LENGTH_SHORT);
+                } else {
+                    Toast toast = Toast.makeText(getApplicationContext(), "ID inválido", Toast.LENGTH_SHORT);
                     toast.show();
                 }
 
@@ -162,8 +200,8 @@ public class MainActivity extends AppCompatActivity {
                 String removeId = returnRemove.getText().toString();
                 if (removeId.length() == 8) {
                     sendIntentWithExtras("rem.action", "REM", "REM" + removeId);
-                }else{
-                    Toast toast = Toast.makeText(getApplicationContext(),"ID inválido",Toast.LENGTH_SHORT);
+                } else {
+                    Toast toast = Toast.makeText(getApplicationContext(), "ID inválido", Toast.LENGTH_SHORT);
                     toast.show();
                 }
 
@@ -176,8 +214,8 @@ public class MainActivity extends AppCompatActivity {
                 String minutiae = returnGetMinutiae.getText().toString();
                 if (minutiae.length() == 8) {
                     sendIntentWithExtras("getMinutiae.action", "GETMINUTIAE", "GETMINUTIAE" + minutiae);
-                }else{
-                    Toast toast = Toast.makeText(getApplicationContext(),"Minúcia inválida",Toast.LENGTH_SHORT);
+                } else {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Minúcia inválida", Toast.LENGTH_SHORT);
                     toast.show();
                 }
             }
@@ -197,8 +235,8 @@ public class MainActivity extends AppCompatActivity {
                 String setMinutiae = returnSetMinutiae.getText().toString();
                 if (setMinutiae.length() == 1712) {
                     sendIntentWithExtras("add.action", "ADD", "ADD" + setMinutiae);
-                }else{
-                    Toast toast = Toast.makeText(getApplicationContext(),"Minúcia inválida",Toast.LENGTH_SHORT);
+                } else {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Minúcia inválida", Toast.LENGTH_SHORT);
                     toast.show();
                 }
             }
@@ -212,7 +250,15 @@ public class MainActivity extends AppCompatActivity {
                 returnRemove.setText("");
                 returnGetMinutiae.setText("");
                 returnLst.setText("");
+                returnSetMinutiae.setText("");
 
+            }
+        });
+
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendIntentWithExtras("reset.action", "RESET", "RESET");
             }
         });
     }
