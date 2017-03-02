@@ -4,21 +4,34 @@
     android:layout_height="match_parent"
     android:background="@android:color/holo_green_dark">
 
+
+
+
     <Button
         android:id="@+id/reset_sensor"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_above="@+id/clean_fields"
+        android:layout_width="140dp"
+        android:layout_height="25dp"
+        android:layout_above="@+id/initialize_sensor"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
         android:background="@android:color/holo_blue_light"
         android:text="RESET" />
 
+    <Button
+        android:id="@+id/initialize_sensor"
+        android:layout_width="140dp"
+        android:layout_height="25dp"
+        android:layout_above="@+id/clean_fields"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:background="@android:color/holo_blue_light"
+        android:text="Inicializar sensor" />
+
 
     <Button
         android:id="@+id/clean_fields"
         android:layout_width="140dp"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="@android:color/holo_blue_light"
@@ -29,10 +42,10 @@
         android:id="@+id/commands_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:gravity="center_horizontal"
         android:layout_alignParentTop="true"
-        android:gravity="center_horizontal">
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <Button
             android:id="@+id/register"

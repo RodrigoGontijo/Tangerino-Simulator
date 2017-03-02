@@ -28,7 +28,17 @@ public class MainActivity extends AppCompatActivity {
 
     private Button reset;
     private Button cleanFields;
+    private Button initializeSensor;
 
+
+    BroadcastReceiver listReceiver;
+    BroadcastReceiver rem;
+    BroadcastReceiver led;
+    BroadcastReceiver cad;
+    BroadcastReceiver getMinutiaeReceiver;
+    BroadcastReceiver add;
+    BroadcastReceiver resetReceiver;
+    BroadcastReceiver initReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +47,17 @@ public class MainActivity extends AppCompatActivity {
 
         setViews();
 
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //sendIntentWithExtras("cad.action","CAD","CAD11116666");
+        //sendIntentWithExtras("led.action","LED","LED");
+        //sendIntentWithExtras("rem.action","REM","REM87458754");
+        //sendIntentWithExtras("list.action","LIST","LIST");
+        //sendIntentWithExtras("getMinutiae.action","GETMINUTIAE", "GETMINUTIAE87458754");
         ledReceiver();
         cadReceiver();
         remReceiver();
@@ -44,13 +65,28 @@ public class MainActivity extends AppCompatActivity {
         listReceiver();
         addReceiver();
         resetReceiver();
+        initReceiver();
 
     }
 
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        unregisterReceiver(listReceiver);
+        unregisterReceiver(rem);
+        unregisterReceiver(led);
+        unregisterReceiver(cad);
+        unregisterReceiver(getMinutiaeReceiver);
+        unregisterReceiver(add);
+        unregisterReceiver(resetReceiver);
+        unregisterReceiver(initReceiver);
+
+    }
+
 
     public void listReceiver() {
-        BroadcastReceiver list = new BroadcastReceiver() {
+        listReceiver = new BroadcastReceiver() {
 
             @Override
             public void onReceive(Context arg0, Intent intent) {
@@ -60,11 +96,28 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-        registerReceiver(list, new IntentFilter("list.action.return"));
+        registerReceiver(listReceiver, new IntentFilter("list.action.return"));
+    }
+
+    public void initReceiver() {
+        initReceiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context arg0, Intent intent) {
+                String action = intent.getAction();
+                if (action.equals("init.action.return")) {
+
+                    Toast toast;
+                    toast = Toast.makeText(getBaseContext(), intent.getExtras().getString("INIT"), Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            }
+        };
+        registerReceiver(initReceiver, new IntentFilter("init.action.return"));
     }
 
     public void remReceiver() {
-        BroadcastReceiver rem = new BroadcastReceiver() {
+        rem = new BroadcastReceiver() {
 
             @Override
             public void onReceive(Context arg0, Intent intent) {
@@ -78,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void ledReceiver() {
-        BroadcastReceiver led = new BroadcastReceiver() {
+        led = new BroadcastReceiver() {
 
             @Override
             public void onReceive(Context arg0, Intent intent) {
@@ -93,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void cadReceiver() {
-        BroadcastReceiver cad = new BroadcastReceiver() {
+        cad = new BroadcastReceiver() {
 
             @Override
             public void onReceive(Context arg0, Intent intent) {
@@ -107,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getMinutiaeReceiver() {
-        BroadcastReceiver getMinutiae = new BroadcastReceiver() {
+        getMinutiaeReceiver = new BroadcastReceiver() {
 
             @Override
             public void onReceive(Context arg0, Intent intent) {
@@ -117,11 +170,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-        registerReceiver(getMinutiae, new IntentFilter("getMinutiae.action.return"));
+        registerReceiver(getMinutiaeReceiver, new IntentFilter("getMinutiae.action.return"));
     }
 
     public void addReceiver() {
-        BroadcastReceiver add = new BroadcastReceiver() {
+        add = new BroadcastReceiver() {
 
             @Override
             public void onReceive(Context arg0, Intent intent) {
@@ -135,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void resetReceiver() {
-        BroadcastReceiver reset = new BroadcastReceiver() {
+        resetReceiver = new BroadcastReceiver() {
 
             @Override
             public void onReceive(Context arg0, Intent intent) {
@@ -147,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-        registerReceiver(reset, new IntentFilter("reset.action.return"));
+        registerReceiver(resetReceiver, new IntentFilter("reset.action.return"));
     }
 
 
@@ -172,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
 
         cleanFields = (Button) findViewById(R.id.clean_fields);
         reset = (Button) findViewById(R.id.reset_sensor);
+        initializeSensor = (Button) findViewById(R.id.initialize_sensor);
 
 
         register.setOnClickListener(new View.OnClickListener() {
@@ -188,12 +242,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        initializeSensor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendIntentWithExtras("init.action", "INIT", "INIT");
+            }
+        });
+
         identify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendIntentWithExtras("led.action", "LED", "LED");
             }
         });
+
         remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -208,6 +270,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
         getMinutiae.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -220,6 +284,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
 
         list.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -261,18 +326,6 @@ public class MainActivity extends AppCompatActivity {
                 sendIntentWithExtras("reset.action", "RESET", "RESET");
             }
         });
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        //sendIntentWithExtras("cad.action","CAD","CAD11116666");
-        //sendIntentWithExtras("led.action","LED","LED");
-        //sendIntentWithExtras("rem.action","REM","REM87458754");
-        //sendIntentWithExtras("list.action","LIST","LIST");
-        //sendIntentWithExtras("getMinutiae.action","GETMINUTIAE", "GETMINUTIAE87458754");
-
     }
 
 
