@@ -67,6 +67,10 @@ public class MainActivity extends AppCompatActivity {
         resetReceiver();
         initReceiver();
 
+        //sendIntentWithExtras("attApp.action", "NAMEAPK", "QiraBiometria-3.0.7");
+        //sendIntentWithExtras("shutdown.action","SHUTDOWN","SHUTDOWN");
+
+
     }
 
 
