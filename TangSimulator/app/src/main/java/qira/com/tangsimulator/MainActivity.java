@@ -5,7 +5,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -339,8 +338,10 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent();
         i.putExtra("NameCommand",intentName);
         i.putExtra("DataCommand", extra);
-        i.setComponent(new ComponentName("qira.com.installpackagesbroadcast", "qira.com.installpackagesbroadcast.CommandBroadcast"));
+        i.setComponent(new ComponentName("qira.com.installpackagesbroadcast", "qira.com.installpackagesbroadcast.commandBroadcast"));
         ComponentName c = startService(i);
+
+
 
 
 //        Intent intent = new Intent();
