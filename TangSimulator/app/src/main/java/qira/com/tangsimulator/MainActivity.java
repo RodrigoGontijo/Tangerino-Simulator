@@ -1,9 +1,11 @@
 package qira.com.tangsimulator;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -334,9 +336,18 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void sendIntentWithExtras(String intentName, String extraName, String extra) {
-        Intent intent = new Intent(intentName);
-        intent.putExtra(extraName, extra);
-        sendBroadcast(intent);
+        Intent i = new Intent();
+        i.putExtra("NameCommand",intentName);
+        i.putExtra("DataCommand", extra);
+        i.setComponent(new ComponentName("qira.com.installpackagesbroadcast", "qira.com.installpackagesbroadcast.CommandBroadcast"));
+        ComponentName c = startService(i);
+
+
+//        Intent intent = new Intent();
+//        intent.setAction(intentName);
+//        intent.putExtra(extraName, extra);
+//        intent.addCategory("android.intent.category.DEFAULT");
+//        sendBroadcast(intent, "qira.com.installpackagesbroadcast.PERMITTED_ACTION");
     }
 
 
