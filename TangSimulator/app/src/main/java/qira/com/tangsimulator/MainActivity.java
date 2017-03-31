@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
+
 public class MainActivity extends AppCompatActivity {
 
     private Button register;
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        attApp("tangerino-6.1");
 
         setViews();
 
@@ -336,12 +339,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void sendIntentWithExtras(String intentName, String extraName, String extra) {
         Intent i = new Intent();
-        i.putExtra("NameCommand",intentName);
+        i.putExtra("NameCommand", intentName);
         i.putExtra("DataCommand", extra);
         i.setComponent(new ComponentName("qira.com.installpackagesbroadcast", "qira.com.installpackagesbroadcast.commandBroadcast"));
         ComponentName c = startService(i);
-
-
 
 
 //        Intent intent = new Intent();
@@ -349,6 +350,18 @@ public class MainActivity extends AppCompatActivity {
 //        intent.putExtra(extraName, extra);
 //        intent.addCategory("android.intent.category.DEFAULT");
 //        sendBroadcast(intent, "qira.com.installpackagesbroadcast.PERMITTED_ACTION");
+    }
+
+    public void attApp(String intentName) {
+
+        Intent launchIntent = getPackageManager().getLaunchIntentForPackage("qira.com.installpackagesbroadcast");
+        launchIntent.putExtra("nameApk", intentName);
+        launchIntent.addFlags (FLAG_ACTIVITY_SINGLE_TOP);
+        if (launchIntent != null) {
+            startActivity(launchIntent);
+        }
+
+
     }
 
 
