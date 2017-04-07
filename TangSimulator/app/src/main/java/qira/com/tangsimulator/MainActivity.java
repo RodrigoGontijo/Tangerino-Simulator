@@ -5,8 +5,11 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +18,11 @@ import android.widget.Toast;
 import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 
 public class MainActivity extends AppCompatActivity {
+
+
+    private static final int DELAY_AUTOSENSE = 500;
+
+    Handler h = new Handler();
 
     private Button register;
     private EditText registerID;
@@ -29,6 +37,11 @@ public class MainActivity extends AppCompatActivity {
     private Button setMinutiae;
     private EditText returnSetMinutiae;
 
+
+    private String id;
+
+
+    private Button setMinutiaes;
     private Button reset;
     private Button cleanFields;
     private Button initializeSensor;
@@ -47,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        attApp("tangerino-6.1");
+        attApp("qt24");
 
         setViews();
 
@@ -56,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
+
+
         super.onResume();
         //sendIntentWithExtras("cad.action","CAD","CAD11116666");
         //sendIntentWithExtras("led.action","LED","LED");
@@ -161,6 +176,9 @@ public class MainActivity extends AppCompatActivity {
                 String action = intent.getAction();
                 if (action.equals("cad.action.return")) {
                     registerID.setText(intent.getExtras().getString("CAD"));
+                    if (intent.getExtras().getString("CAD").compareTo("0000") == 0)
+                        sendIntentWithExtras("getMinutiae.action", "GETMINUTIAE", "GETMINUTIAE" + id);
+
                 }
             }
         };
@@ -175,6 +193,29 @@ public class MainActivity extends AppCompatActivity {
                 String action = intent.getAction();
                 if (action.equals("getMinutiae.action.return")) {
                     returnGetMinutiae.setText(intent.getExtras().getString("GETMINUTIAE"));
+
+                    if (intent.getExtras().getString("GETMINUTIAE").length() > 40) {
+
+                        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+
+                        int contMin = sharedPref.getInt("cont", 0) + 1;
+
+
+
+                        editor.putString("min" + String.valueOf(contMin), intent.getExtras().getString("GETMINUTIAE"));
+                        editor.apply();
+
+                        Log.d("Minucia:",sharedPref.getString("min" +  String.valueOf(contMin), "Error") );
+
+                        Log.d("Cont:", intent.getExtras().getString("GETMINUTIAE"));
+
+                        editor.putInt("cont", contMin);
+                        editor.apply();
+
+                        Toast toast = Toast.makeText(getApplicationContext(), String.valueOf(contMin), Toast.LENGTH_LONG);
+                        toast.show();
+                    }
                 }
             }
         };
@@ -234,12 +275,46 @@ public class MainActivity extends AppCompatActivity {
         cleanFields = (Button) findViewById(R.id.clean_fields);
         reset = (Button) findViewById(R.id.reset_sensor);
         initializeSensor = (Button) findViewById(R.id.initialize_sensor);
+        setMinutiaes = (Button) findViewById(R.id.set_all_minutiaes);
+
+
+        setMinutiaes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+
+                final int cont = sharedPref.getInt("cont", 0);
+
+                h.postDelayed(new Runnable() {
+
+                    public void run() {
+                        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        if (sharedPref.getInt("cont", 0) == 0) {
+                            sharedPref.edit().putInt("cont", cont).apply();
+                            Toast toast = Toast.makeText(getApplicationContext(), "Finish", Toast.LENGTH_SHORT);
+                            toast.show();
+                        } else {
+
+
+                            sendIntentWithExtras("add.action", "ADD", "ADD" + sharedPref.getString("min" + String.valueOf(sharedPref.getInt("cont", 0)), "ERROR"));
+                            sharedPref.edit().putInt("cont", sharedPref.getInt("cont", 0) - 1).apply();
+
+                            h.postDelayed(this, DELAY_AUTOSENSE);
+                        }
+
+                    }
+                }, DELAY_AUTOSENSE);
+            }
+
+        });
 
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String id = registerID.getText().toString();
+                id = registerID.getText().toString();
                 if (id.length() == 8) {
                     sendIntentWithExtras("cad.action", "CAD", "CAD" + id);
                 } else {
@@ -356,7 +431,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent launchIntent = getPackageManager().getLaunchIntentForPackage("qira.com.installpackagesbroadcast");
         launchIntent.putExtra("nameApk", intentName);
-        launchIntent.addFlags (FLAG_ACTIVITY_SINGLE_TOP);
+        launchIntent.addFlags(FLAG_ACTIVITY_SINGLE_TOP);
         if (launchIntent != null) {
             startActivity(launchIntent);
         }
