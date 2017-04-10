@@ -20,7 +20,7 @@ import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 public class MainActivity extends AppCompatActivity {
 
 
-    private static final int DELAY_AUTOSENSE = 500;
+    private static final int DELAY_AUTOSENSE = 3000;
 
     Handler h = new Handler();
 
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        attApp("qt24");
+        //attApp("qt24");
 
         setViews();
 
@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
 
                         Log.d("Minucia:",sharedPref.getString("min" +  String.valueOf(contMin), "Error") );
 
-                        Log.d("Cont:", intent.getExtras().getString("GETMINUTIAE"));
+                        Log.d("Cont: ", String.valueOf(intent.getExtras().getString("GETMINUTIAE").length()));
 
                         editor.putInt("cont", contMin);
                         editor.apply();
@@ -295,8 +295,11 @@ public class MainActivity extends AppCompatActivity {
                             sharedPref.edit().putInt("cont", cont).apply();
                             Toast toast = Toast.makeText(getApplicationContext(), "Finish", Toast.LENGTH_SHORT);
                             toast.show();
+                            Log.d("Final cont:", String.valueOf(cont));
                         } else {
 
+                            //sendIntentWithExtras("reset.action", "RESET", "RESET");
+                            Log.d("Minucia enviada: ",sharedPref.getString("min" + String.valueOf(sharedPref.getInt("cont", 0)), "ERROR"));
 
                             sendIntentWithExtras("add.action", "ADD", "ADD" + sharedPref.getString("min" + String.valueOf(sharedPref.getInt("cont", 0)), "ERROR"));
                             sharedPref.edit().putInt("cont", sharedPref.getInt("cont", 0) - 1).apply();
